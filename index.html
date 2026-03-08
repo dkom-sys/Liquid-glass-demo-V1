@@ -5,25 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Liquid Glass Demo</title>
   <style>
+    :root {
+      --bg-1: #0b1020;
+      --bg-2: #111827;
+      --bg-3: #1f2937;
+      --glass-1: rgba(255, 255, 255, 0.18);
+      --glass-2: rgba(255, 255, 255, 0.08);
+      --border-1: rgba(255, 255, 255, 0.22);
+      --border-2: rgba(255, 255, 255, 0.10);
+      --text-main: rgba(255, 255, 255, 0.96);
+      --text-soft: rgba(255, 255, 255, 0.78);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      --radius: 32px;
+    }
+
     * {
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       padding: 0;
       min-height: 100%;
-      font-family: Arial, sans-serif;
-      color: white;
-      overflow-x: hidden;
     }
 
     body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--text-main);
+      overflow-x: hidden;
       background:
         radial-gradient(circle at 20% 20%, rgba(0, 200, 255, 0.35), transparent 30%),
         radial-gradient(circle at 80% 30%, rgba(255, 0, 150, 0.25), transparent 25%),
-        radial-gradient(circle at 50% 80%, rgba(0, 255, 150, 0.2), transparent 30%),
-        linear-gradient(135deg, #0b1020, #111827 40%, #1f2937);
+        radial-gradient(circle at 50% 80%, rgba(0, 255, 150, 0.20), transparent 30%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 40%, var(--bg-3));
       background-attachment: fixed;
     }
 
@@ -31,11 +46,11 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.05;
-      background-image:
-        radial-gradient(circle, white 1px, transparent 1px);
+      opacity: 0.045;
+      background-image: radial-gradient(circle, white 1px, transparent 1px);
       background-size: 14px 14px;
       mix-blend-mode: soft-light;
+      z-index: 20;
     }
 
     .hero {
@@ -44,27 +59,38 @@
       place-items: center;
       padding: 24px;
       position: relative;
+      isolation: isolate;
     }
 
     .glass-card {
       position: relative;
-      width: min(92vw, 900px);
+      width: min(92vw, 920px);
       padding: 40px;
-      border-radius: 32px;
-      background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.18),
-        rgba(255, 255, 255, 0.08)
-      );
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      backdrop-filter: blur(18px) saturate(180%);
-      -webkit-backdrop-filter: blur(18px) saturate(180%);
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--glass-1), var(--glass-2));
+      border: 1px solid var(--border-1);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
       box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+        var(--shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.24),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.05);
       overflow: hidden;
       isolation: isolate;
+      transform-style: preserve-3d;
+      transition:
+        transform 0.16s ease-out,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+      animation: cardIn 0.8s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.28);
+      box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.26),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.06);
     }
 
     .glass-card::before {
@@ -74,10 +100,10 @@
       background:
         linear-gradient(
           120deg,
-          rgba(255,255,255,0.35) 0%,
-          rgba(255,255,255,0.08) 18%,
-          rgba(255,255,255,0.02) 40%,
-          transparent 60%
+          rgba(255, 255, 255, 0.30) 0%,
+          rgba(255, 255, 255, 0.10) 18%,
+          rgba(255, 255, 255, 0.03) 40%,
+          transparent 62%
         );
       pointer-events: none;
       z-index: 0;
@@ -86,127 +112,189 @@
     .glass-card::after {
       content: "";
       position: absolute;
-      width: 220px;
-      height: 220px;
+      inset: 1px;
+      border-radius: calc(var(--radius) - 1px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .glass-specular {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(
+          240px 240px at var(--mx, 50%) var(--my, 50%),
+          rgba(255, 255, 255, 0.18),
+          rgba(255, 255, 255, 0.08) 20%,
+          rgba(255, 255, 255, 0.03) 40%,
+          transparent 70%
+        );
+      opacity: 0.9;
+      transition: opacity 0.2s ease;
+    }
+
+    .top-glow {
+      position: absolute;
+      top: -90px;
+      right: -70px;
+      width: 240px;
+      height: 240px;
       border-radius: 50%;
-      top: -80px;
-      right: -60px;
-      background: radial-gradient(circle, rgba(255,255,255,0.25), transparent 65%);
-      filter: blur(10px);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.25), transparent 68%);
+      filter: blur(12px);
       pointer-events: none;
       z-index: 0;
     }
 
     .content {
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
 
     .badge {
-      display: inline-block;
-      padding: 8px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
       border-radius: 999px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
+      font-weight: 600;
       letter-spacing: 0.04em;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.16);
       margin-bottom: 18px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.5);
+      flex: 0 0 auto;
     }
 
     h1 {
       margin: 0 0 14px;
-      font-size: clamp(2rem, 5vw, 4.5rem);
-      line-height: 0.98;
-      letter-spacing: -0.04em;
+      font-size: clamp(2.3rem, 5vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      max-width: 10ch;
+      text-wrap: balance;
+      text-shadow: 0 1px 18px rgba(255, 255, 255, 0.06);
     }
 
     p {
       margin: 0;
-      font-size: clamp(1rem, 2vw, 1.2rem);
-      line-height: 1.7;
-      color: rgba(255,255,255,0.86);
+      font-size: clamp(1rem, 2vw, 1.16rem);
+      line-height: 1.72;
+      color: var(--text-soft);
       max-width: 700px;
     }
 
     .actions {
-      margin-top: 28px;
+      margin-top: 30px;
       display: flex;
       flex-wrap: wrap;
       gap: 14px;
     }
 
     .btn {
-      text-decoration: none;
-      color: white;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
       padding: 14px 20px;
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      text-decoration: none;
+      font-weight: 600;
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       box-shadow:
-        0 4px 20px rgba(0,0,0,0.18),
-        inset 0 1px 0 rgba(255,255,255,0.2);
+        0 6px 24px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.16) 35%,
+        transparent 70%
+      );
+      transform: translateX(-120%);
+      transition: transform 0.5s ease;
     }
 
     .btn:hover {
       transform: translateY(-2px);
-      background: rgba(255,255,255,0.18);
-      border-color: rgba(255,255,255,0.28);
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.28);
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.24);
+    }
+
+    .btn:hover::before {
+      transform: translateX(120%);
+    }
+
+    .btn.secondary {
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .orb {
       position: fixed;
-      width: 240px;
-      height: 240px;
+      width: 260px;
+      height: 260px;
       border-radius: 50%;
-      filter: blur(24px);
-      opacity: 0.35;
+      filter: blur(28px);
+      opacity: 0.34;
       pointer-events: none;
       z-index: -1;
-      animation: float 12s ease-in-out infinite;
+      animation: float 14s ease-in-out infinite;
+      will-change: transform;
     }
 
     .orb.one {
-      top: 10%;
-      left: 8%;
+      top: 8%;
+      left: 7%;
       background: rgba(0, 191, 255, 0.7);
     }
 
     .orb.two {
-      bottom: 10%;
-      right: 12%;
-      background: rgba(255, 0, 128, 0.6);
+      bottom: 8%;
+      right: 10%;
+      background: rgba(255, 0, 128, 0.58);
       animation-delay: -4s;
     }
 
     .orb.three {
-      top: 55%;
-      left: 45%;
-      background: rgba(0, 255, 170, 0.45);
+      top: 54%;
+      left: 42%;
+      background: rgba(0, 255, 170, 0.42);
       animation-delay: -8s;
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0) translateX(0) scale(1);
-      }
-      25% {
-        transform: translateY(-20px) translateX(15px) scale(1.05);
-      }
-      50% {
-        transform: translateY(10px) translateX(-10px) scale(0.98);
-      }
-      75% {
-        transform: translateY(-12px) translateX(18px) scale(1.02);
-      }
-    }
-
-    .tilt {
-      transform-style: preserve-3d;
-      transition: transform 0.12s ease-out;
     }
 
     .glow-line {
@@ -216,16 +304,55 @@
       background: linear-gradient(
         90deg,
         transparent,
-        rgba(255,255,255,0.6),
+        rgba(255, 255, 255, 0.62),
         transparent
       );
-      opacity: 0.7;
+      opacity: 0.8;
+      z-index: 2;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) translateX(0) scale(1);
+      }
+      25% {
+        transform: translateY(-24px) translateX(14px) scale(1.05);
+      }
+      50% {
+        transform: translateY(12px) translateX(-12px) scale(0.98);
+      }
+      75% {
+        transform: translateY(-14px) translateX(18px) scale(1.02);
+      }
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: perspective(1200px) translateY(24px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: perspective(1200px) translateY(0) scale(1);
+      }
     }
 
     @media (max-width: 640px) {
+      :root {
+        --radius: 24px;
+      }
+
       .glass-card {
         padding: 24px;
-        border-radius: 24px;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 9vw, 2.9rem);
+        max-width: 12ch;
+      }
+
+      p {
+        font-size: 1rem;
       }
 
       .actions {
@@ -233,7 +360,24 @@
       }
 
       .btn {
+        width: 100%;
         text-align: center;
+      }
+
+      .orb {
+        width: 180px;
+        height: 180px;
+        filter: blur(24px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .glass-card,
+      .orb,
+      .btn,
+      .glass-specular {
+        animation: none !important;
+        transition: none !important;
       }
     }
   </style>
@@ -245,45 +389,67 @@
   <div class="noise"></div>
 
   <section class="hero">
-    <div class="glass-card tilt" id="glassCard">
+    <div class="glass-card" id="glassCard">
+      <div class="glass-specular" id="specular"></div>
+      <div class="top-glow"></div>
+
       <div class="content">
         <div class="badge">Liquid Glass Demo</div>
+
         <h1>Soft. Glossy. Slightly illegal-looking.</h1>
+
         <p>
           This is a pure HTML/CSS/JS glassmorphism-style landing block you can host
           directly on GitHub Pages. It uses blur, layered highlights, gradients,
-          and subtle motion to fake that premium “liquid glass” feel.
+          and subtle motion to fake that premium liquid-glass feel.
         </p>
 
         <div class="actions">
           <a href="#" class="btn">Primary Action</a>
-          <a href="#" class="btn">Secondary Action</a>
+          <a href="#" class="btn secondary">Secondary Action</a>
         </div>
       </div>
+
       <div class="glow-line"></div>
     </div>
   </section>
 
   <script>
     const card = document.getElementById("glassCard");
+    const specular = document.getElementById("specular");
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-    document.addEventListener("mousemove", (e) => {
-      const rect = card.getBoundingClientRect();
-      const cardX = rect.left + rect.width / 2;
-      const cardY = rect.top + rect.height / 2;
+    if (!prefersReducedMotion && canHover) {
+      const resetCard = () => {
+        card.style.transform = "perspective(1200px) rotateX(0deg) rotateY(0deg)";
+        card.style.setProperty("--mx", "50%");
+        card.style.setProperty("--my", "50%");
+      };
 
-      const offsetX = (e.clientX - cardX) / rect.width;
-      const offsetY = (e.clientY - cardY) / rect.height;
+      card.addEventListener("mousemove", (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-      const rotateY = offsetX * 10;
-      const rotateX = -offsetY * 10;
+        const px = x / rect.width;
+        const py = y / rect.height;
 
-      card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    });
+        const rotateY = (px - 0.5) * 12;
+        const rotateX = (0.5 - py) * 12;
 
-    document.addEventListener("mouseleave", () => {
-      card.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg)`;
-    });
+        card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.style.setProperty("--mx", `${px * 100}%`);
+        card.style.setProperty("--my", `${py * 100}%`);
+      });
+
+      card.addEventListener("mouseleave", resetCard);
+      resetCard();
+    } else {
+      card.style.transform = "none";
+      card.style.setProperty("--mx", "50%");
+      card.style.setProperty("--my", "50%");
+    }
   </script>
 </body>
 </html>
