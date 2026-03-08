@@ -3,44 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Liquid Glass Demo</title>
+  <title>Liquid Glass Demo V4</title>
   <style>
     :root {
-      --bg-1: #0b1020;
-      --bg-2: #111827;
-      --bg-3: #1f2937;
-      --glass-1: rgba(255, 255, 255, 0.16);
-      --glass-2: rgba(255, 255, 255, 0.07);
-      --border-1: rgba(255, 255, 255, 0.22);
+      --bg-1: #07111f;
+      --bg-2: #0f172a;
+      --bg-3: #172033;
       --text-main: rgba(255, 255, 255, 0.96);
-      --text-soft: rgba(255, 255, 255, 0.8);
-      --radius: 32px;
+      --text-soft: rgba(255, 255, 255, 0.72);
+      --text-faint: rgba(255, 255, 255, 0.56);
+      --glass-1: rgba(255, 255, 255, 0.17);
+      --glass-2: rgba(255, 255, 255, 0.07);
+      --line-1: rgba(255, 255, 255, 0.22);
+      --line-2: rgba(255, 255, 255, 0.08);
+      --shadow-1: 0 24px 80px rgba(0, 0, 0, 0.38);
+      --radius: 28px;
       --mx: 50%;
       --my: 50%;
-      --rx: 0deg;
-      --ry: 0deg;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       padding: 0;
       min-height: 100%;
     }
 
     body {
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text-main);
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 20% 20%, rgba(0, 200, 255, 0.35), transparent 30%),
-        radial-gradient(circle at 80% 30%, rgba(255, 0, 150, 0.25), transparent 25%),
-        radial-gradient(circle at 50% 80%, rgba(0, 255, 150, 0.20), transparent 30%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 40%, var(--bg-3));
+        radial-gradient(circle at 15% 20%, rgba(0, 180, 255, 0.18), transparent 24%),
+        radial-gradient(circle at 82% 26%, rgba(255, 0, 130, 0.16), transparent 22%),
+        radial-gradient(circle at 55% 78%, rgba(0, 255, 180, 0.10), transparent 26%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 45%, var(--bg-3));
       background-attachment: fixed;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.06;
+      background:
+        linear-gradient(
+          90deg,
+          transparent 0,
+          transparent 24%,
+          rgba(255,255,255,0.03) 24.4%,
+          transparent 25%,
+          transparent 49%,
+          rgba(255,255,255,0.025) 49.4%,
+          transparent 50%,
+          transparent 74%,
+          rgba(255,255,255,0.02) 74.4%,
+          transparent 75%
+        );
+      mix-blend-mode: soft-light;
     }
 
     .noise {
@@ -56,74 +81,66 @@
 
     .orb {
       position: fixed;
-      width: 260px;
-      height: 260px;
       border-radius: 50%;
-      filter: blur(28px);
-      opacity: 0.34;
+      filter: blur(30px);
       pointer-events: none;
       z-index: -1;
-      animation: float 14s ease-in-out infinite;
+      opacity: 0.28;
+      animation: float 16s ease-in-out infinite;
     }
 
     .orb.one {
+      width: 240px;
+      height: 240px;
       top: 8%;
-      left: 7%;
-      background: rgba(0, 191, 255, 0.7);
+      left: 5%;
+      background: rgba(0, 180, 255, 0.65);
     }
 
     .orb.two {
-      bottom: 8%;
-      right: 10%;
-      background: rgba(255, 0, 128, 0.58);
-      animation-delay: -4s;
+      width: 280px;
+      height: 280px;
+      right: 8%;
+      bottom: 10%;
+      background: rgba(255, 0, 140, 0.5);
+      animation-delay: -5s;
     }
 
     .orb.three {
-      top: 54%;
+      width: 220px;
+      height: 220px;
       left: 42%;
-      background: rgba(0, 255, 170, 0.42);
-      animation-delay: -8s;
+      top: 55%;
+      background: rgba(0, 255, 170, 0.32);
+      animation-delay: -9s;
     }
 
     .hero {
       min-height: 100vh;
       display: grid;
       place-items: center;
-      padding: 24px;
+      padding: 28px;
       position: relative;
       isolation: isolate;
     }
 
     .glass-card {
       position: relative;
-      width: min(92vw, 920px);
-      padding: 40px;
+      width: min(100%, 1080px);
       border-radius: var(--radius);
       background: linear-gradient(135deg, var(--glass-1), var(--glass-2));
-      border: 1px solid var(--border-1);
+      border: 1px solid var(--line-1);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
       box-shadow:
-        0 22px 70px rgba(0, 0, 0, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.24),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+        var(--shadow-1),
+        inset 0 1px 0 rgba(255,255,255,0.22),
+        inset 0 -1px 0 rgba(255,255,255,0.04);
       overflow: hidden;
       isolation: isolate;
       transform-style: preserve-3d;
-      transition:
-        transform 0.16s ease-out,
-        box-shadow 0.25s ease,
-        border-color 0.25s ease;
-      animation: cardIn 0.8s cubic-bezier(.2, .8, .2, 1);
-    }
-
-    .glass-card:hover {
-      border-color: rgba(255, 255, 255, 0.28);
-      box-shadow:
-        0 28px 82px rgba(0, 0, 0, 0.42),
-        inset 0 1px 0 rgba(255, 255, 255, 0.26),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+      animation: cardIn 0.85s cubic-bezier(.2, .8, .2, 1);
+      will-change: transform;
     }
 
     .glass-card::before {
@@ -133,13 +150,13 @@
       background:
         linear-gradient(
           120deg,
-          rgba(255, 255, 255, 0.28) 0%,
-          rgba(255, 255, 255, 0.10) 18%,
-          rgba(255, 255, 255, 0.03) 40%,
+          rgba(255,255,255,0.24) 0%,
+          rgba(255,255,255,0.08) 18%,
+          rgba(255,255,255,0.025) 36%,
           transparent 62%
         );
       pointer-events: none;
-      z-index: 1;
+      z-index: 2;
     }
 
     .glass-card::after {
@@ -147,9 +164,39 @@
       position: absolute;
       inset: 1px;
       border-radius: calc(var(--radius) - 1px);
-      border: 1px solid rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--line-2);
       pointer-events: none;
-      z-index: 8;
+      z-index: 10;
+    }
+
+    .top-edge {
+      position: absolute;
+      top: 0;
+      left: 10%;
+      width: 80%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.46),
+        transparent
+      );
+      opacity: 0.9;
+      z-index: 10;
+    }
+
+    .bottom-glow {
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.6),
+        transparent
+      );
+      opacity: 0.75;
+      z-index: 10;
     }
 
     .refraction {
@@ -157,41 +204,40 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      opacity: 0.85;
+      opacity: 0.9;
       background:
         radial-gradient(
-          220px 220px at calc(var(--mx) + 1.2%) calc(var(--my) - 0.8%),
-          rgba(255, 80, 120, 0.07),
+          220px 220px at calc(var(--mx) + 1%) calc(var(--my) - 0.6%),
+          rgba(255, 70, 120, 0.07),
           transparent 42%
         ),
         radial-gradient(
-          220px 220px at calc(var(--mx) - 1.2%) calc(var(--my) + 0.8%),
-          rgba(80, 220, 255, 0.08),
+          220px 220px at calc(var(--mx) - 1%) calc(var(--my) + 0.6%),
+          rgba(70, 220, 255, 0.08),
           transparent 44%
         ),
         radial-gradient(
           180px 180px at var(--mx) var(--my),
-          rgba(255,255,255,0.10),
-          rgba(255,255,255,0.04) 22%,
-          rgba(255,255,255,0.02) 36%,
-          transparent 64%
+          rgba(255,255,255,0.09),
+          rgba(255,255,255,0.035) 24%,
+          rgba(255,255,255,0.015) 42%,
+          transparent 68%
         );
       filter: blur(10px) saturate(140%);
-      transform: translateZ(0);
     }
 
     .specular {
       position: absolute;
       inset: 0;
-      z-index: 2;
+      z-index: 1;
       pointer-events: none;
       background:
         radial-gradient(
-          240px 240px at var(--mx) var(--my),
-          rgba(255, 255, 255, 0.18),
-          rgba(255, 255, 255, 0.08) 20%,
-          rgba(255, 255, 255, 0.02) 42%,
-          transparent 70%
+          260px 260px at var(--mx) var(--my),
+          rgba(255,255,255,0.16),
+          rgba(255,255,255,0.07) 20%,
+          rgba(255,255,255,0.02) 40%,
+          transparent 72%
         );
       mix-blend-mode: screen;
     }
@@ -201,7 +247,7 @@
       inset: 0;
       z-index: 3;
       pointer-events: none;
-      opacity: 0.35;
+      opacity: 0.24;
     }
 
     .aberration::before,
@@ -210,72 +256,69 @@
       position: absolute;
       inset: 0;
       border-radius: inherit;
-      background:
-        radial-gradient(
-          280px 280px at var(--mx) var(--my),
-          rgba(255,255,255,0.06),
-          transparent 55%
-        );
       filter: blur(12px);
+      mix-blend-mode: screen;
     }
 
     .aberration::before {
-      transform: translateX(1.2px);
+      transform: translateX(1px);
       background:
         radial-gradient(
           260px 260px at var(--mx) var(--my),
-          rgba(255, 70, 100, 0.10),
-          transparent 58%
+          rgba(255, 70, 110, 0.09),
+          transparent 60%
         );
-      mix-blend-mode: screen;
     }
 
     .aberration::after {
-      transform: translateX(-1.2px);
+      transform: translateX(-1px);
       background:
         radial-gradient(
           260px 260px at var(--mx) var(--my),
-          rgba(70, 220, 255, 0.10),
-          transparent 58%
+          rgba(70, 220, 255, 0.09),
+          transparent 60%
         );
-      mix-blend-mode: screen;
     }
 
     .shimmer {
       position: absolute;
-      inset: -20%;
+      inset: -25%;
       z-index: 4;
       pointer-events: none;
       background:
         linear-gradient(
           115deg,
-          transparent 35%,
-          rgba(255,255,255,0.02) 42%,
-          rgba(255,255,255,0.12) 50%,
-          rgba(255,255,255,0.03) 58%,
-          transparent 66%
+          transparent 38%,
+          rgba(255,255,255,0.02) 45%,
+          rgba(255,255,255,0.09) 50%,
+          rgba(255,255,255,0.025) 55%,
+          transparent 62%
         );
-      transform: translateX(-35%) rotate(8deg);
-      animation: shimmerPass 8s linear infinite;
-      opacity: 0.75;
+      transform: translateX(-36%) rotate(7deg);
+      animation: shimmerPass 10s linear infinite;
+      opacity: 0.6;
     }
 
     .top-glow {
       position: absolute;
-      top: -90px;
-      right: -70px;
+      top: -100px;
+      right: -80px;
       width: 240px;
       height: 240px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.24), transparent 68%);
-      filter: blur(12px);
+      background: radial-gradient(circle, rgba(255,255,255,0.22), transparent 68%);
+      filter: blur(14px);
       pointer-events: none;
       z-index: 1;
     }
 
-    .content {
+    .card-grid {
       position: relative;
-      z-index: 10;
+      z-index: 12;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.75fr);
+      gap: 28px;
+      padding: 42px;
     }
 
     .badge {
@@ -287,11 +330,11 @@
       font-size: 0.82rem;
       font-weight: 600;
       letter-spacing: 0.04em;
-      color: rgba(255, 255, 255, 0.95);
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: rgba(255,255,255,0.96);
+      background: rgba(255,255,255,0.11);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.16);
       margin-bottom: 18px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
@@ -301,31 +344,31 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 0 16px rgba(255, 255, 255, 0.5);
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 0 16px rgba(255,255,255,0.45);
       flex: 0 0 auto;
     }
 
     h1 {
-      margin: 0 0 14px;
-      font-size: clamp(2.3rem, 5vw, 4.8rem);
-      line-height: 0.95;
-      letter-spacing: -0.05em;
-      max-width: 10ch;
+      margin: 0 0 16px;
+      font-size: clamp(2.4rem, 5vw, 5rem);
+      line-height: 0.94;
+      letter-spacing: -0.055em;
+      max-width: 9ch;
       text-wrap: balance;
-      text-shadow: 0 1px 18px rgba(255, 255, 255, 0.06);
+      text-shadow: 0 1px 20px rgba(255,255,255,0.05);
     }
 
-    p {
+    .lead {
       margin: 0;
-      font-size: clamp(1rem, 2vw, 1.16rem);
+      max-width: 58ch;
+      font-size: clamp(1rem, 1.8vw, 1.13rem);
       line-height: 1.72;
       color: var(--text-soft);
-      max-width: 700px;
     }
 
     .actions {
-      margin-top: 30px;
+      margin-top: 28px;
       display: flex;
       flex-wrap: wrap;
       gap: 14px;
@@ -342,18 +385,18 @@
       text-decoration: none;
       font-weight: 600;
       color: white;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.12);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       box-shadow:
-        0 6px 24px rgba(0, 0, 0, 0.18),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        0 8px 24px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.18);
       transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+        transform 0.22s ease,
+        border-color 0.22s ease,
+        background 0.22s ease,
+        box-shadow 0.22s ease;
       overflow: hidden;
     }
 
@@ -364,20 +407,20 @@
       background: linear-gradient(
         120deg,
         transparent 0%,
-        rgba(255, 255, 255, 0.16) 35%,
+        rgba(255,255,255,0.15) 36%,
         transparent 70%
       );
       transform: translateX(-120%);
-      transition: transform 0.5s ease;
+      transition: transform 0.55s ease;
     }
 
     .btn:hover {
       transform: translateY(-2px);
-      background: rgba(255, 255, 255, 0.18);
-      border-color: rgba(255, 255, 255, 0.28);
+      background: rgba(255,255,255,0.17);
+      border-color: rgba(255,255,255,0.26);
       box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 0.24);
+        0 12px 30px rgba(0,0,0,0.22),
+        inset 0 1px 0 rgba(255,255,255,0.22);
     }
 
     .btn:hover::before {
@@ -385,21 +428,46 @@
     }
 
     .btn.secondary {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255,255,255,0.08);
     }
 
-    .glow-line {
-      position: absolute;
-      inset: auto 0 0 0;
-      height: 1px;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.62),
-        transparent
-      );
-      opacity: 0.8;
-      z-index: 10;
+    .side-panel {
+      align-self: end;
+      display: grid;
+      gap: 14px;
+    }
+
+    .meta-card {
+      padding: 16px 16px 15px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .meta-label {
+      margin: 0 0 6px;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-faint);
+    }
+
+    .meta-value {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.9);
+      font-weight: 600;
+    }
+
+    .meta-copy {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text-soft);
     }
 
     @keyframes float {
@@ -407,33 +475,44 @@
         transform: translateY(0) translateX(0) scale(1);
       }
       25% {
-        transform: translateY(-24px) translateX(14px) scale(1.05);
+        transform: translateY(-22px) translateX(12px) scale(1.04);
       }
       50% {
-        transform: translateY(12px) translateX(-12px) scale(0.98);
+        transform: translateY(12px) translateX(-10px) scale(0.98);
       }
       75% {
-        transform: translateY(-14px) translateX(18px) scale(1.02);
+        transform: translateY(-12px) translateX(18px) scale(1.02);
       }
     }
 
     @keyframes shimmerPass {
       0% {
-        transform: translateX(-42%) rotate(8deg);
+        transform: translateX(-38%) rotate(7deg);
       }
       100% {
-        transform: translateX(42%) rotate(8deg);
+        transform: translateX(38%) rotate(7deg);
       }
     }
 
     @keyframes cardIn {
       from {
         opacity: 0;
-        transform: perspective(1200px) translateY(24px) scale(0.98);
+        transform: translateY(24px) scale(0.985);
       }
       to {
         opacity: 1;
-        transform: perspective(1200px) translateY(0) scale(1);
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .side-panel {
+        align-self: start;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
@@ -442,16 +521,21 @@
         --radius: 24px;
       }
 
-      .glass-card {
+      .hero {
+        padding: 18px;
+      }
+
+      .card-grid {
         padding: 24px;
+        gap: 20px;
       }
 
       h1 {
-        font-size: clamp(2rem, 9vw, 2.9rem);
-        max-width: 12ch;
+        font-size: clamp(2rem, 10vw, 3rem);
+        max-width: 11ch;
       }
 
-      p {
+      .lead {
         font-size: 1rem;
       }
 
@@ -461,17 +545,22 @@
 
       .btn {
         width: 100%;
-        text-align: center;
       }
 
-      .orb {
+      .side-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .orb.one,
+      .orb.two,
+      .orb.three {
         width: 180px;
         height: 180px;
         filter: blur(24px);
       }
 
       .aberration {
-        opacity: 0.24;
+        opacity: 0.18;
       }
     }
 
@@ -499,25 +588,42 @@
       <div class="aberration"></div>
       <div class="shimmer"></div>
       <div class="top-glow"></div>
+      <div class="top-edge"></div>
+      <div class="bottom-glow"></div>
 
-      <div class="content">
-        <div class="badge">Liquid Glass Demo</div>
+      <div class="card-grid">
+        <div class="main-panel">
+          <div class="badge">Liquid Glass Demo V4</div>
+          <h1>Designed surface. Not just frosted plastic.</h1>
+          <p class="lead">
+            This version leans into a calmer, more premium look with subtle
+            refraction, edge tint, and a smoother interaction model. Still one
+            HTML file. Still GitHub Pages friendly. Still a tasteful lie.
+          </p>
 
-        <h1>Soft. Glossy. Slightly illegal-looking.</h1>
+          <div class="actions">
+            <a href="#" class="btn">Primary Action</a>
+            <a href="#" class="btn secondary">Secondary Action</a>
+          </div>
+        </div>
 
-        <p>
-          This version fakes refraction, chromatic aberration, and shimmer using
-          only layered gradients, blur, and motion. No shaders. 
-          Just tasteful vibes and lies...
-        </p>
+        <div class="side-panel">
+          <div class="meta-card">
+            <p class="meta-label">Format</p>
+            <p class="meta-value">Single-file HTML</p>
+          </div>
 
-        <div class="actions">
-          <a href="#" class="btn">Primary Action</a>
-          <a href="#" class="btn secondary">Secondary Action</a>
+          <div class="meta-card">
+            <p class="meta-label">Rendering</p>
+            <p class="meta-value">CSS gradients, blur, transforms</p>
+          </div>
+
+          <div class="meta-card">
+            <p class="meta-label">Vibe</p>
+            <p class="meta-copy">Less demo energy. More premium landing-page energy.</p>
+          </div>
         </div>
       </div>
-
-      <div class="glow-line"></div>
     </div>
   </section>
 
@@ -526,13 +632,37 @@
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-    if (!prefersReducedMotion && canHover) {
-      const resetCard = () => {
-        card.style.transform = "perspective(1200px) rotateX(0deg) rotateY(0deg)";
-        card.style.setProperty("--mx", "50%");
-        card.style.setProperty("--my", "50%");
-      };
+    let currentX = 0;
+    let currentY = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let active = false;
+    let rafId = null;
 
+    const setIdleState = () => {
+      card.style.setProperty("--mx", "50%");
+      card.style.setProperty("--my", "50%");
+    };
+
+    const animate = () => {
+      currentX += (targetX - currentX) * 0.08;
+      currentY += (targetY - currentY) * 0.08;
+
+      card.style.transform = `perspective(1400px) rotateX(${currentY}deg) rotateY(${currentX}deg)`;
+
+      if (
+        Math.abs(targetX - currentX) > 0.01 ||
+        Math.abs(targetY - currentY) > 0.01 ||
+        active
+      ) {
+        rafId = requestAnimationFrame(animate);
+      } else {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    };
+
+    if (!prefersReducedMotion && canHover) {
       card.addEventListener("mousemove", (e) => {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -541,20 +671,33 @@
         const px = x / rect.width;
         const py = y / rect.height;
 
-        const rotateY = (px - 0.5) * 12;
-        const rotateX = (0.5 - py) * 12;
+        targetX = (px - 0.5) * 10;
+        targetY = (0.5 - py) * 10;
 
-        card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         card.style.setProperty("--mx", `${px * 100}%`);
         card.style.setProperty("--my", `${py * 100}%`);
+
+        active = true;
+        if (!rafId) animate();
       });
 
-      card.addEventListener("mouseleave", resetCard);
-      resetCard();
+      card.addEventListener("mouseenter", () => {
+        active = true;
+        if (!rafId) animate();
+      });
+
+      card.addEventListener("mouseleave", () => {
+        targetX = 0;
+        targetY = 0;
+        active = false;
+        setIdleState();
+        if (!rafId) animate();
+      });
+
+      setIdleState();
     } else {
       card.style.transform = "none";
-      card.style.setProperty("--mx", "50%");
-      card.style.setProperty("--my", "50%");
+      setIdleState();
     }
   </script>
 </body>
